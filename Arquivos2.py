@@ -2,6 +2,8 @@ from threading import Thread
 from time import time
 from deep_translator import GoogleTranslator
 import speech_recognition as sr
+from gtts import gTTS
+import os
 
 
 class SpeechRecognizer:
@@ -37,6 +39,12 @@ class SpeechRecognizer:
         self.recognizer.adjust_for_ambient_noise(source)
         audio_data = self.recognizer.record(source, duration=5)
         return audio_data
+    
+    def _playAudio(self, text):
+        language = 'en'
+        myobj = gTTS(text=text, lang=language, slow=True)
+        myobj.save("welcome.mp3")
+        os.system("mpg321 welcome.mp3")
 
     def _translate(self, audio_data):
         start = time()
@@ -47,7 +55,9 @@ class SpeechRecognizer:
             translated = GoogleTranslator(
                 source='auto', target='en'
             ).translate(text)
+            self._playAudio(translated)
             self.text = self.text + " " + str(text or "")
+
             self.translated = self.translated + " " + str(translated or "")
             end = time()
 

@@ -9,7 +9,7 @@ def listenToAudio():
     # Configura o modelo de linguagem para modelo médio e lingua inglesa
     model = whisper.load_model("medium.en")
     # Transcreve o áudio para texto
-    result = model.transcribe("output.wav", fp16=False, language="en")
+    result = model.transcribe("output.wav", fp16=False, language="pt")
     # Retorna o texto transcrito
     return result["text"]
 
@@ -48,7 +48,7 @@ def listenMic():
 
 
 def playAudio(text):
-    language = 'pt'
+    language = 'en'
     myobj = gTTS(text=text, lang=language, slow=False)
     myobj.save("welcome.mp3")
     os.system("mpg321 welcome.mp3")
@@ -95,7 +95,7 @@ def main():
     listenMic()
     text = listenToAudio()
     translatedText = GoogleTranslator(
-        source="auto", target="pt").translate(text)
+        source="auto", target="en").translate(text)
     playAudio(translatedText)
     print("\n")
     print(translatedText)
