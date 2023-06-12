@@ -5,6 +5,7 @@ import os
 from gtts import gTTS
 from deep_translator import GoogleTranslator
 
+#Where am I commiting this?
 
 def listenToAudio():
     # Configura o modelo de linguagem para modelo médio e lingua inglesa
