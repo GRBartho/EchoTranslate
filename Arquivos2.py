@@ -7,7 +7,6 @@ import speech_recognition as sr
 class SpeechRecognizer:
     def __init__(self):
         self.recognizer = sr.Recognizer()
-        print(sr.Microphone())
         self.microphone = sr.Microphone()
         self.translated = ""
         self.text = ""
