@@ -31,7 +31,7 @@ class GUI:
 
         self.stop_button = tk.Button(
             self.root,
-            text="Parar",
+            text="Parar gravação",
             state=tk.DISABLED,
             command=self.stop_recording,
             font=("Arial", 16),
@@ -68,7 +68,7 @@ class GUI:
         # Hide play button and invert buttons state
         self.play_audio_button.pack_forget()
         self.record_button.config(state=tk.DISABLED)
-        self.stop_button.config(state=tk.NORMAL)
+        self.stop_button.config(state=tk.ACTIVE)
         self.translated_text = ""
         # Start recording
         self.audio_recorder.start_recording()
@@ -82,9 +82,9 @@ class GUI:
         print(f"Arquivo de áudio: {filename}")
         # Enable and disabled buttons
         self.stop_button.config(state=tk.DISABLED)
-        self.record_button.config(state=tk.NORMAL)
+        self.record_button.config(state=tk.ACTIVE)
         self.play_audio_button.pack(pady=10)
-        self.play_audio_button.config(state=tk.NORMAL)
+        self.play_audio_button.config(state=tk.ACTIVE)
         self.show_text()
 
     def transcribe_text(self):
