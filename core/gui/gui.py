@@ -1,16 +1,16 @@
 import os
 import tkinter as tk
 import whisper
-from gtts import gTTS
-from deep_translator import GoogleTranslator
 
 class GUI:
-    def __init__(self, root, audio_recorder):
+    def __init__(self, root, audio_recorder, transcriber):
         self.root = root
         self.audio_recorder = audio_recorder
+        self.transcriber = transcriber
+        self.translated_text = ""
         self.record_button = None
         self.stop_button = None
-        self.show_text_button = None
+        self.text_box = None
         self.play_audio_button = None
 
     def create_widgets(self):
@@ -45,22 +45,6 @@ class GUI:
         )
         self.stop_button.pack(pady=10)
 
-        self.show_text_button = tk.Button(
-            self.root,
-            text="Mostrar Texto",
-            state=tk.DISABLED,
-            command=self.transcribe_text,
-            font=("Arial", 16),
-            bg="#008000",
-            fg="#ffffff",
-            relief=tk.RAISED,
-            activebackground="#006400",
-            activeforeground="#ffffff",
-            padx=20,
-            pady=10
-        )
-        self.show_text_button.pack(pady=10)
-
         self.play_audio_button = tk.Button(
             self.root,
             text="Tocar Áudio",
@@ -75,39 +59,56 @@ class GUI:
             padx=20,
             pady=10
         )
-        self.play_audio_button.pack(pady=10)
+        self.play_audio_button.pack_forget()
+
+        self.text_box = tk.Text(self.root, height=10, width=50)
+        self.text_box.pack_forget()
 
     def start_recording(self):
-        self.audio_recorder.start_recording()
+        # Hide play button and invert buttons state
+        self.play_audio_button.pack_forget()
         self.record_button.config(state=tk.DISABLED)
         self.stop_button.config(state=tk.NORMAL)
+        self.translated_text = ""
+        # Start recording
+        self.audio_recorder.start_recording()
 
     def stop_recording(self):
         self.audio_recorder.stop_recording()
-        self.stop_button.config(state=tk.DISABLED)
-        self.show_text_button.config(state=tk.NORMAL)
-        self.play_audio_button.config(state=tk.NORMAL)
+
+        # Save recording
         filename = "recording.wav"
         self.audio_recorder.save_recording(filename)
         print(f"Arquivo de áudio: {filename}")
+        # Enable and disabled buttons
+        self.stop_button.config(state=tk.DISABLED)
+        self.record_button.config(state=tk.NORMAL)
+        self.play_audio_button.pack(pady=10)
+        self.play_audio_button.config(state=tk.NORMAL)
+        self.show_text()
 
     def transcribe_text(self):
-        # Configura o modelo de linguagem para modelo médio e lingua inglesa
-        model = whisper.load_model("tiny")
-        # Transcreve o áudio para texto
-        result = model.transcribe("recording.wav", fp16=False, language="pt")
-        translated = GoogleTranslator(
-            source='auto', target='en'
-        ).translate(result["text"])
-        print(translated)
+        if self.translated_text != "":
+            return self.translated_text
+        text = self.transcriber.audio_to_text("recording.wav", "pt")
+        translated = self.transcriber.translate(text, "en")
+        self.translated_text = translated
         return translated
+    
+    def show_text(self):
+        text = self.transcribe_text()
+        # put text in text box
+        self.text_box.config(state=tk.NORMAL)
+        self.text_box.delete(1.0, tk.END)
+        self.text_box.insert(tk.END, text)
+        self.text_box.pack(pady=10)
+        self.text_box.config(state=tk.DISABLED)
 
     def play_audio(self):
         text = self.transcribe_text()
-        language = 'en'
-        myobj = gTTS(text=text, lang=language, slow=True)
-        myobj.save("welcome.mp3")
-        os.system("mpg321 welcome.mp3")
+        filename = self.transcriber.text_to_audio(text, "translated_recording.mp3", 'en')
+        # Start the audio file
+        os.system("mpg123 " + filename)
 
     def run(self):
         self.root.title("EchoTranslate")
