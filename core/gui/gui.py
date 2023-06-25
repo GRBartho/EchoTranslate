@@ -14,15 +14,23 @@ class GUI:
         self.play_audio_button = None
 
     def create_widgets(self):
+        self.title_label = tk.Label(
+            self.root,
+            text="EchoTranslate",
+            font=("Roboto", 32),
+            fg="purple"
+        )
+        self.title_label.pack(pady=20)
+
         self.record_button = tk.Button(
             self.root,
             text="Gravar",
             command=self.start_recording,
             font=("Arial", 16),
-            bg="#008000",
+            bg="#006400",
             fg="#ffffff",
             relief=tk.RAISED,
-            activebackground="#006400",
+            activebackground="#008000",
             activeforeground="#ffffff",
             padx=20,
             pady=10
@@ -35,10 +43,10 @@ class GUI:
             state=tk.DISABLED,
             command=self.stop_recording,
             font=("Arial", 16),
-            bg="#008000",
+            bg="#006400",
             fg="#ffffff",
             relief=tk.RAISED,
-            activebackground="#006400",
+            activebackground="#008000",
             activeforeground="#ffffff",
             padx=20,
             pady=10
@@ -51,10 +59,10 @@ class GUI:
             state=tk.DISABLED,
             command=self.play_audio,
             font=("Arial", 16),
-            bg="#008000",
+            bg="#006400",
             fg="#ffffff",
             relief=tk.RAISED,
-            activebackground="#006400",
+            activebackground="#008000",
             activeforeground="#ffffff",
             padx=20,
             pady=10
@@ -67,6 +75,7 @@ class GUI:
     def start_recording(self):
         # Hide play button and invert buttons state
         self.play_audio_button.pack_forget()
+        self.text_box.pack_forget()
         self.record_button.config(state=tk.DISABLED)
         self.stop_button.config(state=tk.ACTIVE)
         self.translated_text = ""
@@ -94,7 +103,7 @@ class GUI:
         translated = self.transcriber.translate(text, "en")
         self.translated_text = translated
         return translated
-    
+
     def show_text(self):
         text = self.transcribe_text()
         # put text in text box
@@ -112,7 +121,8 @@ class GUI:
 
     def run(self):
         self.root.title("EchoTranslate")
-        self.root.geometry("400x300")
+        self.root.geometry("400x600")
+        self.root.resizable(True, True)
         self.create_widgets()
         self.root.mainloop()
 
