@@ -2,3 +2,7 @@ venv
 .DS_Store
 .pyc
 .cpython-311.pyc
+.pyc
+.cpython
+__pycache__
+
