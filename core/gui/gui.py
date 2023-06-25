@@ -96,12 +96,8 @@ class GUI:
         self.translated_text = ""
         # Start recording
         self.audio_recorder.start_recording()
-    
-    def printThingy(self):
-        print(self.auto_play_audio_bool)
 
     def stop_recording(self):
-        self.printThingy()
         self.audio_recorder.stop_recording()
         # Save recording
         filename = "recording.wav"
@@ -142,7 +138,6 @@ class GUI:
 
     def activate_auto_play(self):
         self.auto_play_audio_bool = not self.auto_play_audio_bool
-        self.printThingy()
 
     def run(self):
         self.root.title("EchoTranslate")
