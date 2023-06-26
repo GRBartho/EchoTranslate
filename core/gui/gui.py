@@ -54,7 +54,7 @@ class GUI:
             language_frame,
             textvariable=self.output_language,
             state="readonly",
-            width=15
+            width=15,
         )
         self.output_combobox['values'] = ('pt', 'en', 'es', 'fr','ja', 'ru')  # Add more languages as needed
         # Buttons
@@ -176,7 +176,6 @@ class GUI:
         # Stop recording
         self.stop_recording()
         # Show results
-        time.sleep(1)
         self.record_button.config(state=tk.ACTIVE)
         self.play_audio_button.grid()
         self.show_text()
@@ -191,7 +190,6 @@ class GUI:
         '''Handle click on play audio button'''
         self.play_audio_button.config(state=tk.DISABLED)
         self.play_audio()
-        time.sleep(1)
         self.play_audio_button.config(state=tk.ACTIVE)
 
     def start_recording(self):
