@@ -1,5 +1,6 @@
 import os
 import tkinter as tk
+from tkinter import ttk
 from tkmacosx import Button
 import time
 
@@ -18,8 +19,8 @@ class GUI:
         self.play_audio_button = None
         self.auto_play_audio = None
         # Language
-        self.input_language = "pt"
-        self.output_language = "en"
+        self.input_language = tk.StringVar(value="pt")  # Language of input
+        self.output_language = tk.StringVar(value="en")  # Language of output
 
     def create_widgets(self):
         '''Create all widgets on their initial state'''
@@ -29,57 +30,71 @@ class GUI:
             font=("Roboto", 40),
             fg="#7857EC"
         )
-        self.title_label.pack(pady=20)
+        self.title_label.grid(row=0, column=0, columnspan=2, pady=20)
+
+        language_frame = tk.Frame(self.root)
+        language_frame.grid(row=1, column=0, padx=10, pady=10)
+
+        input_label = tk.Label(language_frame, text="Língua de entrada:")
+        input_label.grid(row=0, column=0, sticky="w")
+
+        input_combobox = ttk.Combobox(language_frame, textvariable=self.input_language)
+        input_combobox['values'] = ('pt', 'en', 'es', 'fr')  # Add more languages as needed
+        input_combobox.grid(row=1, column=0, padx=10, pady=5)
+
+        output_label = tk.Label(language_frame, text="Língua de saída:")
+        output_label.grid(row=0, column=1, sticky="w")
+
+        output_combobox = ttk.Combobox(language_frame, textvariable=self.output_language)
+        output_combobox['values'] = ('en', 'pt', 'es', 'fr')  # Add more languages as needed
+        output_combobox.grid(row=1, column=1, padx=10, pady=5)
+
+        button_frame = tk.Frame(self.root)
+        button_frame.grid(row=2, column=0, columnspan=2, pady=10)
 
         self.record_button = Button(
-            self.root,
+            button_frame,
             text="Gravar",
             command=self.on_click_start_recording,
             font=("Arial", 16),
-            # bg="#e31837",
-            # fg="#ffffff",
             activebackground="#e31837",
             activeforeground="#ffffff",
             relief=tk.RAISED,
             padx=20,
             pady=10
         )
-        self.record_button.pack(pady=10)
+        self.record_button.grid(row=0, column=0, padx=10)
 
         self.stop_button = Button(
-            self.root,
+            button_frame,
             text="Parar gravação",
             state=tk.DISABLED,
             command=self.on_click_stop_recording,
             font=("Arial", 16),
-            # bg="#e31837",
-            # fg="#ffffff",
             activebackground="#e31837",
             activeforeground="#ffffff",
             relief=tk.RAISED,
             padx=20,
             pady=10
         )
-        self.stop_button.pack(pady=10)
+        self.stop_button.grid(row=0, column=1, padx=10)
 
         self.play_audio_button = Button(
-            self.root,
+            button_frame,
             text="Ouvir áudio",
             state=tk.DISABLED,
             command=self.on_click_play_audio,
             font=("Arial", 16),
-            # bg="#e31837",
-            # fg="#ffffff",
             activebackground="#e31837",
             activeforeground="#ffffff",
             relief=tk.RAISED,
             padx=20,
             pady=10
         )
-        self.play_audio_button.pack_forget()
+        self.play_audio_button.grid(row=0, column=2, padx=10)
 
         self.auto_play_audio = tk.Checkbutton(
-            self.root,
+            button_frame,
             text="Ouvir áudio automaticamente",
             command=self.activate_auto_play,
             font=("Arial", 16),
@@ -90,9 +105,10 @@ class GUI:
             padx=20,
             pady=10,
         )
-        self.auto_play_audio.pack(pady=10)
+        self.auto_play_audio.grid(row=1, column=0, columnspan=3, pady=10)
 
         self.text_box = tk.Text(self.root, height=10, width=50)
+        self.text_box.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
         self.text_box.pack_forget()
 
     def on_click_start_recording(self):
@@ -120,7 +136,6 @@ class GUI:
             self.play_audio()
         else:
             self.play_audio_button.config(state=tk.ACTIVE)
-        
 
     def on_click_play_audio(self):
         '''Handle click on play audio button'''
@@ -155,15 +170,15 @@ class GUI:
         '''Transcribes audio to text and translates it to selected language'''
         if self.translated_text != "":
             return self.translated_text
-        text = self.transcriber.audio_to_text("recording.wav", self.input_language)
-        translated = self.transcriber.translate(text, self.output_language)
+        text = self.transcriber.audio_to_text("recording.wav", self.input_language.get())
+        translated = self.transcriber.translate(text, self.output_language.get())
         self.translated_text = translated
         return translated
-    
+
     def play_audio(self):
         '''Plays audio from transcribed text'''
         text = self.transcribe_text()
-        filename = self.transcriber.text_to_audio(text, "translated_recording.mp3", self.output_language)
+        filename = self.transcriber.text_to_audio(text, "translated_recording.mp3", self.output_language.get())
         # Start the audio file
         os.system("mpg123 " + filename)
 
@@ -174,8 +189,7 @@ class GUI:
     def run(self):
         '''Starts the GUI'''
         self.root.title("EchoTranslate")
-        self.root.geometry("400x600")
+        self.root.geometry("600x600")
         self.root.resizable(True, True)
         self.create_widgets()
         self.root.mainloop()
-
