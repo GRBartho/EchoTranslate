@@ -18,6 +18,7 @@ class GUI:
         self.text_box = None
         self.play_audio_button = None
         self.auto_play_audio = None
+        self.switch_language_button = None
         # Language
         self.input_language = tk.StringVar(value="pt")  # Language of input
         self.output_language = tk.StringVar(value="en")  # Language of output
@@ -38,15 +39,28 @@ class GUI:
             textvariable=self.input_language,
             width=15
         )
-        self.input_combobox['values'] = ('pt', 'en', 'es', 'fr')  # Add more languages as needed
+        self.input_combobox['values'] = ('pt', 'en', 'es', 'fr','ja', 'ru')  # Add more languages as needed
         self.output_label = tk.Label(language_frame, text="Língua de Saída:")
         self.output_combobox = ttk.Combobox(
             language_frame,
             textvariable=self.output_language,
             width=15
         )
-        self.output_combobox['values'] = ('en', 'pt', 'es', 'fr')  # Add more languages as needed
+        self.output_combobox['values'] = ('pt', 'en', 'es', 'fr','ja', 'ru')  # Add more languages as needed
         # Buttons
+        self.switch_language_button = Button(
+            self.root,
+            text="Alternar idiomas",
+            command=self.on_click_switch_language,
+            font=("Arial", 16),
+            bg="#e31837",
+            fg="#ffffff",
+            activebackground="#e31837",
+            activeforeground="#ffffff",
+            relief=tk.RAISED,
+            padx=20,
+            pady=10
+        )
         self.record_button = Button(
             self.root,
             text="Gravar",
@@ -112,17 +126,24 @@ class GUI:
         self.input_combobox.grid(row=3, column=0, padx=(30,10))
         self.output_label.grid(row=2, column=1, pady=0)
         self.output_combobox.grid(row=3, column=1, padx=(10, 30))
+        self.switch_language_button.grid(row=4, column=0, columnspan=2, pady=12)
 
-        self.record_button.grid(row=4, column=0, columnspan=2, pady=12)
-        self.stop_button.grid(row=5, column=0, columnspan=2, pady=(12, 24))
+        self.record_button.grid(row=5, column=0, columnspan=2, pady=12)
+        self.stop_button.grid(row=6, column=0, columnspan=2, pady=(12, 24))
         
-        self.auto_play_audio.grid(row=6, column=0, columnspan=2, pady=0)
+        self.auto_play_audio.grid(row=7, column=0, columnspan=2, pady=0)
 
-        self.play_audio_button.grid(row=7, column=0, columnspan=2, pady=(24, 12))
+        self.play_audio_button.grid(row=8, column=0, columnspan=2, pady=(24, 12))
         self.play_audio_button.grid_remove()
 
-        self.text_box.grid(row=8, column=0, columnspan=2, padx=20)
+        self.text_box.grid(row=9, column=0, columnspan=2, padx=20)
         self.text_box.grid_remove()
+
+    def on_click_switch_language(self):
+        '''Handle click on switch language button'''
+        inputLanguage = self.input_language.get()
+        self.input_language.set(self.output_language.get())
+        self.output_language.set(inputLanguage)
 
     def on_click_start_recording(self):
         '''Handle click on record button'''
