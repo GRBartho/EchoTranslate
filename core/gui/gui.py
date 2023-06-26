@@ -30,43 +30,43 @@ class GUI:
             font=("Roboto", 40),
             fg="#7857EC"
         )
-        self.title_label.grid(row=0, column=0, columnspan=2, pady=20)
+        self.title_label.pack(pady=20)
 
+        # Language selectors
         language_frame = tk.Frame(self.root)
-        language_frame.grid(row=1, column=0, padx=10, pady=10)
+        language_frame.pack()
 
         input_label = tk.Label(language_frame, text="Língua de entrada:")
-        input_label.grid(row=0, column=0, sticky="w")
+        input_label.pack(side=tk.TOP)
 
         input_combobox = ttk.Combobox(language_frame, textvariable=self.input_language)
         input_combobox['values'] = ('pt', 'en', 'es', 'fr')  # Add more languages as needed
-        input_combobox.grid(row=1, column=0, padx=10, pady=5)
+        input_combobox.pack(side=tk.TOP)
 
         output_label = tk.Label(language_frame, text="Língua de saída:")
-        output_label.grid(row=0, column=1, sticky="w")
+        output_label.pack(side=tk.TOP)
 
         output_combobox = ttk.Combobox(language_frame, textvariable=self.output_language)
         output_combobox['values'] = ('en', 'pt', 'es', 'fr')  # Add more languages as needed
-        output_combobox.grid(row=1, column=1, padx=10, pady=5)
-
-        button_frame = tk.Frame(self.root)
-        button_frame.grid(row=2, column=0, columnspan=2, pady=10)
+        output_combobox.pack(side=tk.TOP)
 
         self.record_button = Button(
-            button_frame,
+            self.root,
             text="Gravar",
             command=self.on_click_start_recording,
             font=("Arial", 16),
+            bg="#e31837",
+            fg="#ffffff",
             activebackground="#e31837",
             activeforeground="#ffffff",
             relief=tk.RAISED,
             padx=20,
             pady=10
         )
-        self.record_button.grid(row=0, column=0, padx=10)
+        self.record_button.pack(pady=10)
 
         self.stop_button = Button(
-            button_frame,
+            self.root,
             text="Parar gravação",
             state=tk.DISABLED,
             command=self.on_click_stop_recording,
@@ -77,10 +77,10 @@ class GUI:
             padx=20,
             pady=10
         )
-        self.stop_button.grid(row=0, column=1, padx=10)
+        self.stop_button.pack(pady=10)
 
         self.play_audio_button = Button(
-            button_frame,
+            self.root,
             text="Ouvir áudio",
             state=tk.DISABLED,
             command=self.on_click_play_audio,
@@ -91,10 +91,10 @@ class GUI:
             padx=20,
             pady=10
         )
-        self.play_audio_button.grid(row=0, column=2, padx=10)
+        self.play_audio_button.pack_forget()
 
         self.auto_play_audio = tk.Checkbutton(
-            button_frame,
+            self.root,
             text="Ouvir áudio automaticamente",
             command=self.activate_auto_play,
             font=("Arial", 16),
@@ -105,10 +105,9 @@ class GUI:
             padx=20,
             pady=10,
         )
-        self.auto_play_audio.grid(row=1, column=0, columnspan=3, pady=10)
+        self.auto_play_audio.pack(pady=10)
 
         self.text_box = tk.Text(self.root, height=10, width=50)
-        self.text_box.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
         self.text_box.pack_forget()
 
     def on_click_start_recording(self):
