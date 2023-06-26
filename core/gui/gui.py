@@ -37,6 +37,7 @@ class GUI:
         self.input_combobox = ttk.Combobox(
             language_frame, 
             textvariable=self.input_language,
+            state="readonly",
             width=15
         )
         self.input_combobox['values'] = ('pt', 'en', 'es', 'fr','ja', 'ru')  # Add more languages as needed
@@ -44,6 +45,7 @@ class GUI:
         self.output_combobox = ttk.Combobox(
             language_frame,
             textvariable=self.output_language,
+            state="readonly",
             width=15
         )
         self.output_combobox['values'] = ('pt', 'en', 'es', 'fr','ja', 'ru')  # Add more languages as needed
