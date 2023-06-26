@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkmacosx import Button
 import time
+from core.gui.styles import MAIN, SECONDARY, BACKGROUND, combostyle_theme_setting
 
 class GUI:
     def __init__(self, root, audio_recorder, transcriber):
@@ -24,11 +25,18 @@ class GUI:
         self.output_language = tk.StringVar(value="en")  # Language of output
 
     def _get_widgets(self):
+        combostyle = ttk.Style()
+        combostyle.theme_create(
+            'combostyle', 
+            parent='alt',
+            settings=combostyle_theme_setting
+        )
+        combostyle.theme_use('combostyle') 
         self.title_label = tk.Label(
             self.root,
             text="EchoTranslate",
             font=("Roboto", 40),
-            fg="#7857EC"
+            fg=MAIN
         )
         # Language selectors
         language_frame = tk.Frame(self.root)
@@ -37,8 +45,8 @@ class GUI:
         self.input_combobox = ttk.Combobox(
             language_frame, 
             textvariable=self.input_language,
+            width=15,
             state="readonly",
-            width=15
         )
         self.input_combobox['values'] = ('pt', 'en', 'es', 'fr','ja', 'ru')  # Add more languages as needed
         self.output_label = tk.Label(language_frame, text="Língua de Saída:")
@@ -50,27 +58,31 @@ class GUI:
         )
         self.output_combobox['values'] = ('pt', 'en', 'es', 'fr','ja', 'ru')  # Add more languages as needed
         # Buttons
+        photo = tk.PhotoImage(file = r"assets/change_icon.png")
+        photoimage = photo.subsample(70, 70)
         self.switch_language_button = Button(
             self.root,
-            text="Alternar idiomas",
+            image=photoimage,
             command=self.on_click_switch_language,
             font=("Arial", 16),
-            bg="#e31837",
+            width=30,
+            height=30,
+            bg=BACKGROUND,
             fg="#ffffff",
-            activebackground="#e31837",
+            activebackground=BACKGROUND,
             activeforeground="#ffffff",
-            relief=tk.RAISED,
+            relief=tk.FLAT,
             padx=20,
             pady=10
         )
         self.record_button = Button(
             self.root,
-            text="Gravar",
+            text="Iniciar gravação",
             command=self.on_click_start_recording,
             font=("Arial", 16),
-            bg="#e31837",
+            bg=SECONDARY,
             fg="#ffffff",
-            activebackground="#e31837",
+            activebackground=SECONDARY,
             activeforeground="#ffffff",
             relief=tk.RAISED,
             padx=20,
@@ -82,7 +94,7 @@ class GUI:
             state=tk.DISABLED,
             command=self.on_click_stop_recording,
             font=("Arial", 16),
-            activebackground="#e31837",
+            activebackground=SECONDARY,
             activeforeground="#ffffff",
             relief=tk.RAISED,
             padx=20,
@@ -108,6 +120,7 @@ class GUI:
             command=self.activate_auto_play,
             font=("Arial", 16),
             fg="#ffffff",
+            selectcolor=MAIN,
             relief=tk.RAISED,
             variable=self.should_auto_play_audio,
             activeforeground="#ffffff",
@@ -121,24 +134,24 @@ class GUI:
         self.root.grid()
         self._get_widgets()
        
-        self.title_label.grid(row=0, column=0, columnspan=2, pady=20)
+        self.title_label.grid(row=0, column=0, columnspan=3, pady=20)
         
-        self.language_frame.grid(row=1, column=0, columnspan=2, pady=10)
+        self.language_frame.grid(row=1, column=0, columnspan=3, pady=10)
         self.input_label.grid(row=2, column=0, pady=0)
-        self.input_combobox.grid(row=3, column=0, padx=(30,10))
-        self.output_label.grid(row=2, column=1, pady=0)
-        self.output_combobox.grid(row=3, column=1, padx=(10, 30))
-        self.switch_language_button.grid(row=4, column=0, columnspan=2, pady=12)
+        self.input_combobox.grid(row=3, column=0, padx=(30, 30))
+        self.output_label.grid(row=2, column=2, pady=0)
+        self.output_combobox.grid(row=3, column=2, padx=(30, 30))
+        self.switch_language_button.grid(row=1, column=1, padx=20, pady=(20, 0))
 
-        self.record_button.grid(row=5, column=0, columnspan=2, pady=12)
-        self.stop_button.grid(row=6, column=0, columnspan=2, pady=(12, 24))
+        self.record_button.grid(row=5, column=0, columnspan=3, pady=12)
+        self.stop_button.grid(row=6, column=0, columnspan=3, pady=(12, 24))
         
-        self.auto_play_audio.grid(row=7, column=0, columnspan=2, pady=0)
+        self.auto_play_audio.grid(row=7, column=0, columnspan=3, pady=0)
 
-        self.play_audio_button.grid(row=8, column=0, columnspan=2, pady=(24, 12))
+        self.play_audio_button.grid(row=8, column=0, columnspan=3, pady=(24, 12))
         self.play_audio_button.grid_remove()
 
-        self.text_box.grid(row=9, column=0, columnspan=2, padx=20)
+        self.text_box.grid(row=9, column=0, columnspan=3, padx=20)
         self.text_box.grid_remove()
 
     def on_click_switch_language(self):
@@ -226,7 +239,7 @@ class GUI:
     def run(self):
         '''Starts the GUI'''
         self.root.title("EchoTranslate")
-        self.root.geometry("406x620")
-        self.root.resizable(True, True)
+        self.root.geometry("426x620")
+        self.root.resizable(False, False)
         self.create_layout_widgets()
         self.root.mainloop()
