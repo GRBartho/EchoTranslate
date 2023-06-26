@@ -22,34 +22,31 @@ class GUI:
         self.input_language = tk.StringVar(value="pt")  # Language of input
         self.output_language = tk.StringVar(value="en")  # Language of output
 
-    def create_widgets(self):
-        '''Create all widgets on their initial state'''
+    def _get_widgets(self):
         self.title_label = tk.Label(
             self.root,
             text="EchoTranslate",
             font=("Roboto", 40),
             fg="#7857EC"
         )
-        self.title_label.pack(pady=20)
-
         # Language selectors
         language_frame = tk.Frame(self.root)
-        language_frame.pack()
-
-        input_label = tk.Label(language_frame, text="Língua de entrada:")
-        input_label.pack(side=tk.TOP)
-
-        input_combobox = ttk.Combobox(language_frame, textvariable=self.input_language)
-        input_combobox['values'] = ('pt', 'en', 'es', 'fr')  # Add more languages as needed
-        input_combobox.pack(side=tk.TOP)
-
-        output_label = tk.Label(language_frame, text="Língua de saída:")
-        output_label.pack(side=tk.TOP)
-
-        output_combobox = ttk.Combobox(language_frame, textvariable=self.output_language)
-        output_combobox['values'] = ('en', 'pt', 'es', 'fr')  # Add more languages as needed
-        output_combobox.pack(side=tk.TOP)
-
+        self.language_frame = language_frame
+        self.input_label = tk.Label(language_frame, text="Língua de Entrada:")
+        self.input_combobox = ttk.Combobox(
+            language_frame, 
+            textvariable=self.input_language,
+            width=15
+        )
+        self.input_combobox['values'] = ('pt', 'en', 'es', 'fr')  # Add more languages as needed
+        self.output_label = tk.Label(language_frame, text="Língua de Saída:")
+        self.output_combobox = ttk.Combobox(
+            language_frame,
+            textvariable=self.output_language,
+            width=15
+        )
+        self.output_combobox['values'] = ('en', 'pt', 'es', 'fr')  # Add more languages as needed
+        # Buttons
         self.record_button = Button(
             self.root,
             text="Gravar",
@@ -63,8 +60,6 @@ class GUI:
             padx=20,
             pady=10
         )
-        self.record_button.pack(pady=10)
-
         self.stop_button = Button(
             self.root,
             text="Parar gravação",
@@ -77,8 +72,6 @@ class GUI:
             padx=20,
             pady=10
         )
-        self.stop_button.pack(pady=10)
-
         self.play_audio_button = Button(
             self.root,
             text="Ouvir áudio",
@@ -91,8 +84,8 @@ class GUI:
             padx=20,
             pady=10
         )
-        self.play_audio_button.pack_forget()
-
+        # Others
+        self.text_box = tk.Text(self.root, height=10, width=50)
         self.auto_play_audio = tk.Checkbutton(
             self.root,
             text="Ouvir áudio automaticamente",
@@ -105,16 +98,37 @@ class GUI:
             padx=20,
             pady=10,
         )
-        self.auto_play_audio.pack(pady=10)
 
-        self.text_box = tk.Text(self.root, height=10, width=50)
-        self.text_box.pack_forget()
+    def create_layout_widgets(self):
+        '''Create all widgets on their initial grid state'''
+        self.root = tk.Frame(self.root)
+        self.root.grid()
+        self._get_widgets()
+       
+        self.title_label.grid(row=0, column=0, columnspan=2, pady=20)
+        
+        self.language_frame.grid(row=1, column=0, columnspan=2, pady=10)
+        self.input_label.grid(row=2, column=0, pady=0)
+        self.input_combobox.grid(row=3, column=0, padx=(30,10))
+        self.output_label.grid(row=2, column=1, pady=0)
+        self.output_combobox.grid(row=3, column=1, padx=(10, 30))
+
+        self.record_button.grid(row=4, column=0, columnspan=2, pady=12)
+        self.stop_button.grid(row=5, column=0, columnspan=2, pady=(12, 24))
+        
+        self.auto_play_audio.grid(row=6, column=0, columnspan=2, pady=0)
+
+        self.play_audio_button.grid(row=7, column=0, columnspan=2, pady=(24, 12))
+        self.play_audio_button.grid_remove()
+
+        self.text_box.grid(row=8, column=0, columnspan=2, padx=20)
+        self.text_box.grid_remove()
 
     def on_click_start_recording(self):
         '''Handle click on record button'''
         # Hide play and text and invert buttons state
-        self.text_box.pack_forget()
-        self.play_audio_button.pack_forget()
+        self.play_audio_button.grid_remove()
+        self.text_box.grid_remove()
         self.record_button.config(state=tk.DISABLED)
         self.stop_button.config(state=tk.ACTIVE)
         # Start recording
@@ -128,11 +142,12 @@ class GUI:
         # Show results
         time.sleep(1)
         self.record_button.config(state=tk.ACTIVE)
-        self.play_audio_button.pack(pady=10)
+        self.play_audio_button.grid()
         self.show_text()
         if self.should_auto_play_audio:
             # Play audio if auto play is active
             self.play_audio()
+            self.play_audio_button.config(state=tk.ACTIVE)
         else:
             self.play_audio_button.config(state=tk.ACTIVE)
 
@@ -162,7 +177,7 @@ class GUI:
         self.text_box.config(state=tk.NORMAL)
         self.text_box.delete(1.0, tk.END)
         self.text_box.insert(tk.END, text)
-        self.text_box.pack(pady=10)
+        self.text_box.grid()
         self.text_box.config(state=tk.DISABLED)
 
     def transcribe_text(self):
@@ -188,7 +203,7 @@ class GUI:
     def run(self):
         '''Starts the GUI'''
         self.root.title("EchoTranslate")
-        self.root.geometry("600x600")
+        self.root.geometry("406x620")
         self.root.resizable(True, True)
-        self.create_widgets()
+        self.create_layout_widgets()
         self.root.mainloop()
