@@ -12,7 +12,7 @@ class EchoApp(tk.Tk):
 
         self.title("EchoTranslate")
         self.eval("tk::PlaceWindow . center")
-        self.iconbitmap("assets/icon.ico")
+        self.iconbitmap("altAssets/icon.ico")
         self.resizable(False, False)
 
         self.is_recording = False
@@ -27,7 +27,7 @@ class EchoApp(tk.Tk):
                             expand = True)
         widgets_holder.columnconfigure(0, weight = 1)
 
-        cog_image = Image.open("assets/cog.png").resize((50, 50))
+        cog_image = Image.open("altAssets/cog.png").resize((50, 50))
         cog_image = ImageTk.PhotoImage(cog_image)
 
         settings = tk.Button(widgets_holder,

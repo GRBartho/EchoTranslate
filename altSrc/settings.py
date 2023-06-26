@@ -7,7 +7,7 @@ def show_settings(app) -> None:
     popup = tk.Toplevel(bg = APP_BG)
 
     popup.title("Settings")
-    popup.iconbitmap("assets/icon.ico")
+    popup.iconbitmap("altAssets/icon.ico")
     popup.resizable(False, False)
 
     widgets_holder = tk.Frame(popup, bg = APP_BG)
