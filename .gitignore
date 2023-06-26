@@ -1,3 +1,4 @@
+*.pyc
 venv
 .DS_Store
 .pyc
@@ -5,4 +6,3 @@ venv
 .pyc
 .cpython
 __pycache__
-
