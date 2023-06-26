@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkmacosx import Button
 import time
+from core.gui.styles import MAIN, SECONDARY, BACKGROUND, combostyle_theme_setting
 
 class GUI:
     def __init__(self, root, audio_recorder, transcriber):
@@ -25,22 +26,17 @@ class GUI:
 
     def _get_widgets(self):
         combostyle = ttk.Style()
-
-        combostyle.theme_create('combostyle', parent='alt',
-            settings = {'TCombobox': {'configure': {
-                'fieldbackground': '#76767A',
-                'selectbackground': '#76767A',
-                'background': '#7857EC',
-        }}}
+        combostyle.theme_create(
+            'combostyle', 
+            parent='alt',
+            settings=combostyle_theme_setting
         )
-        # ATTENTION: this applies the new style 'combostyle' to all ttk.Combobox
         combostyle.theme_use('combostyle') 
-
         self.title_label = tk.Label(
             self.root,
             text="EchoTranslate",
             font=("Roboto", 40),
-            fg="#7857EC"
+            fg=MAIN
         )
         # Language selectors
         language_frame = tk.Frame(self.root)
@@ -71,9 +67,9 @@ class GUI:
             font=("Arial", 16),
             width=30,
             height=30,
-            bg="#76767A",
+            bg=BACKGROUND,
             fg="#ffffff",
-            activebackground="#76767A",
+            activebackground=BACKGROUND,
             activeforeground="#ffffff",
             relief=tk.FLAT,
             padx=20,
@@ -84,9 +80,9 @@ class GUI:
             text="Iniciar gravação",
             command=self.on_click_start_recording,
             font=("Arial", 16),
-            bg="#e31837",
+            bg=SECONDARY,
             fg="#ffffff",
-            activebackground="#e31837",
+            activebackground=SECONDARY,
             activeforeground="#ffffff",
             relief=tk.RAISED,
             padx=20,
@@ -98,7 +94,7 @@ class GUI:
             state=tk.DISABLED,
             command=self.on_click_stop_recording,
             font=("Arial", 16),
-            activebackground="#e31837",
+            activebackground=SECONDARY,
             activeforeground="#ffffff",
             relief=tk.RAISED,
             padx=20,
@@ -124,10 +120,10 @@ class GUI:
             command=self.activate_auto_play,
             font=("Arial", 16),
             fg="#ffffff",
+            selectcolor=MAIN,
             relief=tk.RAISED,
             variable=self.should_auto_play_audio,
             activeforeground="#ffffff",
-            selectcolor="#7857EC",
             padx=20,
             pady=10,
         )
